@@ -4,6 +4,7 @@ import scipy
 import scipy.spatial
 import pandas
 from sklearn.manifold import TSNE
+from pydantic import BaseModel
 
 dotenv.load_dotenv("../../.env")
 VALUES = dotenv.dotenv_values()
@@ -56,3 +57,28 @@ class OpenAIService:
         matrix = self.df.ada_embedding.apply(eval).to_list()
 
         return tsne.fit_transform(matrix)
+
+    def call_chat(self, message):
+
+        messages = [
+            {
+                "role": "system",
+                "content": "Uses Brazillian Portuguese language for responses",
+            },
+            {
+                "role": "system",
+                "content": "You give insight-like responses, explaining shortly and coming with a solution",
+            },
+            {
+                "role": "system",
+                "content": "You are being used by possible healthcare professionals",
+            },
+            {"role": "user", "content": message},
+        ]
+
+        response = self.client.chat.completions.create(
+            model=VALUES["EMBEDDING_MODEL"],
+            messages=messages,
+        )
+
+        return response
