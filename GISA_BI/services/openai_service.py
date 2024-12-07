@@ -13,7 +13,7 @@ VALUES = dotenv.dotenv_values()
 class OpenAIService:
     def __init__(self, path):
         self.client = openai.OpenAI(api_key=VALUES["OPENAI_API_KEY"])
-        self.df = pandas.read_csv(path)
+        self.df = pandas.read_csv(path, delimiter=";", usecols=["UF", "Faixa Etária"])
         self.df = self.df.dropna()
 
     def get_embed(self, text):
